@@ -12,8 +12,10 @@ function* generatorFunc() {
 
 
 const generator = generatorFunc();
+const iterator = generator[Symbol.iterator]()
 generator.next();
 generator.next();
 // generator.next();
 // generator.next();
 // generator.next();
+console.log(generator === iterator)
