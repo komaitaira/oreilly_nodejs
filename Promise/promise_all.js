@@ -17,7 +17,6 @@ asyncFunc()
    asyncFunc(),
    asyncFunc(),
    asyncFunc(),
-   asyncFunc()
   ])
   .then(() => 
    console.log("並行実行所要時間", Date.now() - start)
