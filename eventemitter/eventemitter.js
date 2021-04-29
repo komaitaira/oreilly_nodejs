@@ -2,7 +2,8 @@ const { EventEmitter } = require("events");
 
 function createFizzBuzzEventEmitter(until) {
   const eventEmitter = new EventEmitter();
-  _emitFizzBuzz(eventEmitter, until);
+  // イベントの発行を常に非同期にするため、Process.nextTick()を使用
+  process.nextTick(() => _emitFizzBuzz(eventEmitter, until))
   return eventEmitter;
 }
 
