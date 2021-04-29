@@ -23,4 +23,35 @@ async function _emitFizzBuzz(eventEmitter, until) {
   eventEmitter.emit("end");
 }
 
-createFizzBuzzEventEmitter(20);
+function startListener() {
+  console.log("start");
+}
+
+function fizzListener(count) {
+  console.log("Fizz", count);
+}
+
+function buzzListener(count) {
+  console.log("Buzz", count);
+}
+
+function fizzBuzzListener(count) {
+  console.log("FizzBuzz", count);
+}
+
+function endListener() {
+  console.log("end");
+  this
+    .off("start", startListener)
+    .off("Fizz", fizzListener)
+    .off("Buzz", buzzListener)
+    .off("FizzBuzz", fizzBuzzListener)
+    .off("end", endListener)
+}
+
+createFizzBuzzEventEmitter(40)
+  .on("start", startListener)
+  .on("Fizz", fizzListener)
+  .once("Buzz", buzzListener)
+  .on("FizzBuzz", fizzBuzzListener)
+  .on("end", endListener)
