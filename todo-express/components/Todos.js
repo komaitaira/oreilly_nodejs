@@ -11,11 +11,11 @@ const pages = {
 }
 
 // CSRでページを切り替えるためのリンク
-const pageLinks = Object.keys(pages).map((page, index) => {
+const pageLinks = Object.keys(pages).map((page, index) => 
   <Link href={`/${page === 'index' ? '' : page}`} key={index}>
     <a style={{ marginRight: 10 }}>{pages[page].title}</a>
   </Link>
-});
+);
 
 // reactコンポーネントを実装し、外部のモジュールで利用可能なようexport文で公開
 export default function Todos(props) {
@@ -39,13 +39,13 @@ export default function Todos(props) {
       <h1>{title}</h1>
       {/**todo一覧の表示 */}
       <ul>
-        {todos.map(({ id, title, completed }) => {
+        {todos.map(({ id, title, completed }) => 
           <li key={id}>
             <span style={completed ? { textDecoration: 'line-through' } : {}}>
               {title}
             </span>
           </li>
-        })}
+        )}
       </ul>
       <div>{pageLinks}</div>
     </div>
