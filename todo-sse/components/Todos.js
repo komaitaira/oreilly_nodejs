@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
-import 'isomorphic-fetch';
+// import 'isomorphic-fetch';
 
 // 各ページに関する情報の定義
 const pages = {
@@ -24,11 +24,30 @@ export default function Todos(props) {
   // コンポーネントの状態の初期化と、propsの値に応じた更新
   const [todos, setTodos] = useState([]);
   useEffect(() => {
-    fetch(`/api/todos${fetchQuery}`)
-      .then(async res => res.ok
-        ? setTodos(await res.json())
-        : alert(await res.text())
+    // fetchによるTodo取得の実装を削除
+    // fetch(`/api/todos${fetchQuery}`)
+    //   .then(async res => res.ok
+    //     ? setTodos(await res.json())
+    //     : alert(await res.text())
+    //   )
+
+    // EventSourceを使った実装に置き換え
+    const eventSource = new EventSource('/api/todos/events');
+    // SSE受信時の処理
+    eventSource.addEventListener("message", e => {
+      const todos = JSON.parse(e.data)
+      setTodos(
+        typeof completed === 'undefined'
+          ? todos
+          : todos.filter(todo => todo.completed === completed)
       )
+    })
+
+    // エラーハンドリング
+    eventSource.addEventListener("error", e => console.log("SSEエラー", e));
+    // useEffectで関数を返すと副作用のクリーンアップとして実行される
+    // ここでは、EventSourceインスタンスをクローズする
+    return () => eventSource.close()
   }, [props.page])
 
   return (

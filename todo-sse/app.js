@@ -68,6 +68,7 @@ app.post('/api/todos', (req, res, next) => {
   todos.push(todo);
   // ステータスコード201(Created)で結果を返す
   res.status(201).json(todo);
+  onUpdateTodos();
 });
 
 // 指定されたidのtodoを取得するためのミドルウェア
