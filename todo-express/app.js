@@ -37,6 +37,20 @@ app.post('/api/todos', (req, res, next) => {
   res.status(201).json(todo);
 });
 
+// 指定されたidのtodoを取得するためのミドルウェア
+app.use('/api/todos/:id(\\d+)', (req, res, next) => {
+  const targetId = Number(req.params.id);
+  // todosからfindメソッドを使ってtargetIdと一致する最初のtodoを取得
+  const todo = todos.find(todo => todo.id === targetId);
+  if (!todo) {
+    const err = new Error("Todo not found");
+    err.statusCode = 404;
+    return next(err);
+  }
+  req.todo = todo;
+  next();
+})
+
 // エラーハンドリングミドルウェア
 app.use((err, req, res, next) => {
   console.error(err);
