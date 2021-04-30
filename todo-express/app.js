@@ -62,6 +62,11 @@ app.route('/api/todos/:id(\\d+)/completed')
     res.json(req.todo);
   })
 
+app.delete('/api/todos/:id(\\d+)', (req, res) => {
+  todos = todos.filter(todo => todo !== req.todo);
+  res.status(204).end();
+})
+
 // エラーハンドリングミドルウェア
 app.use((err, req, res, next) => {
   console.error(err);
