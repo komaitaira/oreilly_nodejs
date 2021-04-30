@@ -20,6 +20,31 @@ app.get('/api/todos', (req, res) => {
   res.json(todos.filter(todo => todo.completed === completed));
 });
 
+// 全クライアントに対するSSE送信関数を保持する配列
+let sseSenders = [];
+// SSEのIDを管理するための変数
+let sseId = 1;
+
+// Todo一覧の取得（SSE）
+app.get('/api/todos/events', (req, res) => {
+  // タイムアウトを抑止
+  req.socket.setTimeout(0);
+  res.set({
+    // Content-TypeでSSEであることを示す
+    'Content-Type': 'text/event-stream'
+  })
+  // クライアントにSSEを送信する関数を作成して登録
+  const send = (id, data) => res.write(`id: ${id}\ndata: ${data}\n\n`);
+  sseSenders.push(send);
+  // リクエスト発生時点の状態を送信
+  send(sseId, JSON.stringify(todos));
+  // リクエストがクローズされたらレスポンスを終了してSSE送信関数を配列から削除
+  req.on('close', () => {
+    res.end();
+    sseSenders = sseSenders.filter(_send => _send !== send);
+  })
+})
+
 let id = 2;
 
 // Todoの新規登録
