@@ -45,6 +45,14 @@ app.get('/api/todos/events', (req, res) => {
   })
 })
 
+
+// todoの更新に伴い、全クライアントに対してSSEを送信する
+function onUpdateTodos() {
+  sseId += 1;
+  const data = JSON.stringify(todos);
+  sseSenders.forEach(send => send(sseId, data))
+}
+
 let id = 2;
 
 // Todoの新規登録
