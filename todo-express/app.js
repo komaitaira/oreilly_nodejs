@@ -49,7 +49,18 @@ app.use('/api/todos/:id(\\d+)', (req, res, next) => {
   }
   req.todo = todo;
   next();
-})
+});
+
+// TodoのCompletedの設定、解除
+app.route('/api/todos/:id(\\d+)/completed')
+  .put((req, res) => {
+    req.todo.completed = true;
+    res.json(req.todo);
+  })
+  .delete((req, res) => {
+    req.todo.completed = false;
+    res.json(req.todo);
+  })
 
 // エラーハンドリングミドルウェア
 app.use((err, req, res, next) => {
