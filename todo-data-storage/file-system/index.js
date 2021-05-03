@@ -1,6 +1,6 @@
 'use strict';
 const { exname, extname } = require('path');
-const { readdir, readFile, writeFile } = require('fs').promises;
+const { readdir, readFile, writeFile, unlink } = require('fs').promises;
 
 exports.fetchAll = async () => {
   // 同一ディレクトリ内に存在するJSONファイルを全て取得
@@ -33,3 +33,10 @@ exports.update = async (id, update) => {
     err => err.code === "ENOENT" ? null : Promise.reject(err)
   )
 }
+
+exports.remove = id => unlink(`${__dirname}/${id}.json`)
+  .then(
+    () => id,
+    // ファイルが存在しない場合はnullを返し、それ以外はそのままエラーにする
+    err => err.code === "ENOENT" ? null : Promise.reject(err) 
+  )
